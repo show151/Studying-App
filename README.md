@@ -8,7 +8,6 @@
 - `src/ui/main_window.ui`: Qt Designerで作成されたユーザーインターフェースの定義。
 - `src/resources/resources.qrc`: アプリケーションで使用するリソースの定義。
 - `requirements.txt`: プロジェクトの依存関係をリストしています。
-- `.vscode/launch.json`: VS Codeのデバッグ構成。
 
 ## 使用方法
 
