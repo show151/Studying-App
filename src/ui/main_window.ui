@@ -1,0 +1,21 @@
+このファイルはQt Designerで作成されたユーザーインターフェースの定義を含むため、具体的な内容はQt Designerで生成されるXML形式のデータになります。以下は、`main_window.ui`ファイルの基本的な構造の例です。
+
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <widget class="QPushButton" name="pushButton">
+     <property name="text">
+      <string>ボタン</string>
+     </property>
+    </widget>
+   </layout>
+  </widget>
+  <menuBar class="QMenuBar" name="menubar"/>
+  <statusBar class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
