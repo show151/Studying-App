@@ -1,12 +1,32 @@
 import PyQt6.QtWidgets as Qw
 import PyQt6.QtCore as Qc
 
+sp_exp = Qw.QSizePolicy.Policy.Expanding
+
 class TimerWidget(Qw.QWidget):
   def __init__(self):
     super().__init__()
     self.setWindowTitle("Timer")
     self.setGeometry(150, 150, 300, 200)
     layout = Qw.QVBoxLayout(self)
+
+    layout.setSpacing(20)
+    layout.setAlignment(Qc.Qt.AlignmentFlag.AlignCenter)
+
+    button_style = """
+            QPushButton {
+                font-size: 18px;
+                padding: 10px;
+                border-radius: 8px;
+                background-color: #a0a0a0;
+            }
+            QPushButton:hover {
+                background-color: #d0d0d0;
+            }
+            QPushButton:pressed {
+                background-color: #a0a0a0;
+            }
+        """
 
     self.timer_display = Qw.QLabel("25:00", self)
     self.timer_display.setAlignment(Qc.Qt.AlignmentFlag.AlignCenter)
@@ -31,24 +51,38 @@ class TimerWidget(Qw.QWidget):
 
     layout.addLayout(input_layout)
 
-    self.set_time_button = Qw.QPushButton("Set Time")
-    self.set_time_button.clicked.connect(self.set_custom_time)
-    layout.addWidget(self.set_time_button)
-
     button_layout = Qw.QVBoxLayout()
     layout.addLayout(button_layout)
 
+    self.set_time_button = Qw.QPushButton("Set Time")
+    self.set_time_button.setStyleSheet(button_style)
+    self.set_time_button.setSizePolicy(sp_exp, sp_exp)
+    self.set_time_button.clicked.connect(self.set_custom_time)
+    button_layout.addWidget(self.set_time_button)
+
     self.start_button = Qw.QPushButton("Start")
+    self.start_button.setStyleSheet(button_style)
+    self.start_button.setSizePolicy(sp_exp, sp_exp)
     self.start_button.clicked.connect(self.start_timer)
     button_layout.addWidget(self.start_button)
 
     self.stop_button = Qw.QPushButton("Stop")
+    self.stop_button.setStyleSheet(button_style)
+    self.stop_button.setSizePolicy(sp_exp, sp_exp)
     self.stop_button.clicked.connect(self.stop_timer)
     button_layout.addWidget(self.stop_button)
 
     self.reset_button = Qw.QPushButton("Reset")
+    self.reset_button.setStyleSheet(button_style)
+    self.reset_button.setSizePolicy(sp_exp, sp_exp)
     self.reset_button.clicked.connect(self.reset_timer)
     button_layout.addWidget(self.reset_button)
+
+    self.btn_Quit = Qw.QPushButton("Quit")
+    self.btn_Quit.clicked.connect(self.close)
+    self.btn_Quit.setStyleSheet(button_style)
+    self.btn_Quit.setSizePolicy(sp_exp, sp_exp)
+    button_layout.addWidget(self.btn_Quit)
 
     self.timer = Qc.QTimer(self)
     self.timer.timeout.connect(self.update_timer)
