@@ -75,7 +75,8 @@ class MainWindow(Qw.QMainWindow):
   def add_goal(self, goal_text, checked=False):
     item = Qw.QListWidgetItem(goal_text)
     item.setFlags(item.flags() | Qc.Qt.ItemFlag.ItemIsUserCheckable)
-    item.setCheckState(Qc.Qt.CheckState.Checked if checked else Qc.Qt.CheckState.Unchecked)
+    item.setCheckState(
+        Qc.Qt.CheckState.Checked if checked else Qc.Qt.CheckState.Unchecked)
     self.goals_list.addItem(item)
     self.save_goals()
 
@@ -89,7 +90,8 @@ class MainWindow(Qw.QMainWindow):
     for i in range(self.goals_list.count()):
       item = self.goals_list.item(i)
       if item is not None:
-        goals.append({"text": item.text(), "checked": item.checkState() == Qc.Qt.CheckState.Checked})
+        goals.append(
+            {"text": item.text(), "checked": item.checkState() == Qc.Qt.CheckState.Checked})
     with open(DATA_FILE, "w") as file:
       json.dump(goals, file)
 
