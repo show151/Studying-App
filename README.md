@@ -1,6 +1,4 @@
-# my-pyqt6-app/README.md
-
-# My PyQt6 App
+# Studying App
 
 このプロジェクトは、PyQt6を使用して作成されたデスクトップアプリケーションです。アプリケーションのメインウィンドウはQt Designerで設計されており、リソースはQtのリソースシステムを使用して管理されています。
 
