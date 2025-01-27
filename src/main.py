@@ -3,6 +3,7 @@ import PyQt6.QtCore as Qc
 import sys
 import timer_widget as tw
 import goals_widget as gw
+import subject_selection as ss
 import json
 
 sp_exp = Qw.QSizePolicy.Policy.Expanding
@@ -19,6 +20,7 @@ class MainWindow(Qw.QMainWindow):
     main_layout = Qw.QVBoxLayout(central_widget)
 
     button_layout = Qw.QHBoxLayout()
+    button_layout.setSpacing(20)
     button_layout.setAlignment(Qc.Qt.AlignmentFlag.AlignLeft)
     main_layout.addLayout(button_layout)
 
@@ -36,9 +38,12 @@ class MainWindow(Qw.QMainWindow):
     self.btn_Goals.clicked.connect(self.show_goals)
     button_layout.addWidget(self.btn_Goals)
 
-    self.goals_list = Qw.QListWidget()
-    self.goals_list.itemChanged.connect(self.check_goals)
-    main_layout.addWidget(self.goals_list)
+    self.btn_prac = Qw.QPushButton("Practice")
+    self.btn_prac.setMinimumSize(50, 20)
+    self.btn_prac.setMaximumSize(100, 20)
+    self.btn_prac.setSizePolicy(sp_exp, sp_exp)
+    self.btn_prac.clicked.connect(self.open_subject_selection)
+    button_layout.addWidget(self.btn_prac)
 
     self.btn_Quit = Qw.QPushButton("Quit")
     self.btn_Quit.clicked.connect(self.close)
@@ -46,6 +51,10 @@ class MainWindow(Qw.QMainWindow):
     self.btn_Quit.setMaximumSize(100, 20)
     self.btn_Quit.setSizePolicy(sp_exp, sp_exp)
     button_layout.addWidget(self.btn_Quit)
+
+    self.goals_list = Qw.QListWidget()
+    self.goals_list.itemChanged.connect(self.check_goals)
+    main_layout.addWidget(self.goals_list)
 
     self.sb_status = Qw.QStatusBar()
     self.setStatusBar(self.sb_status)
@@ -66,7 +75,8 @@ class MainWindow(Qw.QMainWindow):
   def add_goal(self, goal_text, checked=False):
     item = Qw.QListWidgetItem(goal_text)
     item.setFlags(item.flags() | Qc.Qt.ItemFlag.ItemIsUserCheckable)
-    item.setCheckState(Qc.Qt.CheckState.Checked if checked else Qc.Qt.CheckState.Unchecked)
+    item.setCheckState(
+        Qc.Qt.CheckState.Checked if checked else Qc.Qt.CheckState.Unchecked)
     self.goals_list.addItem(item)
     self.save_goals()
 
@@ -80,7 +90,8 @@ class MainWindow(Qw.QMainWindow):
     for i in range(self.goals_list.count()):
       item = self.goals_list.item(i)
       if item is not None:
-        goals.append({"text": item.text(), "checked": item.checkState() == Qc.Qt.CheckState.Checked})
+        goals.append(
+            {"text": item.text(), "checked": item.checkState() == Qc.Qt.CheckState.Checked})
     with open(DATA_FILE, "w") as file:
       json.dump(goals, file)
 
@@ -92,6 +103,10 @@ class MainWindow(Qw.QMainWindow):
           self.add_goal(goal["text"], goal["checked"])
     except FileNotFoundError:
       pass
+
+  def open_subject_selection(self):
+    self.subject_window = ss.SubjectSelection()
+    self.subject_window.show()
 
 if __name__ == "__main__":
   app = Qw.QApplication(sys.argv)
