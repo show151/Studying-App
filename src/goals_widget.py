@@ -4,7 +4,7 @@ import PySide6.QtCore as Qc
 sp_exp = Qw.QSizePolicy.Policy.Expanding
 class GoalsWidget(Qw.QWidget):
 
-  goals_added = Qc.pyqtSignal(str)
+  goals_added = Qc.Signal(str)
 
   def __init__(self):
     super().__init__()

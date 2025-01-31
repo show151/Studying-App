@@ -1,4 +1,5 @@
 import PySide6.QtWidgets as Qw
+import PySide6.QtCore as Qc
 import random
 
 sp_exp = Qw.QSizePolicy.Policy.Expanding
@@ -37,6 +38,7 @@ class EnglishPractice(Qw.QWidget):
     layout.addWidget(self.word_list_label)
 
     self.word_list = Qw.QListWidget(self)
+    self.word_list.itemChanged.connect(self.remove_checked_words)
     layout.addWidget(self.word_list)
 
     #単語練習
@@ -83,7 +85,12 @@ class EnglishPractice(Qw.QWidget):
       return
 
     self.word_dict[word] = meaning
-    self.word_list.addItem(f"{word} - {meaning}")
+
+    item = Qw.QListWidgetItem(f"{word} - {meaning}")
+    item.setFlags(item.flags() | Qc.Qt.ItemFlag.ItemIsUserCheckable)
+    item.setCheckState(Qc.Qt.CheckState.Unchecked)
+    self.word_list.addItem(item)
+
     self.word_input.clear()
     self.meaning_input.clear()
     Qw.QMessageBox.information(self, "Word Added", f"'{word}' has been added to the word list.")
@@ -121,3 +128,11 @@ class EnglishPractice(Qw.QWidget):
     else:
       self.result_label.setText(f"Wrong! Correct answer is '{correct_answer}'.")
       self.result_label.setStyleSheet("color: red;")
+
+  def remove_checked_words(self, item):
+    """チェックされた単語を削除する"""
+    if item.checkState() == Qc.Qt.CheckState.Checked:
+      word = item.text()
+      self.word_dict.pop(word, None)
+      row = self.word_list.row(item)
+      self.word_list.takeItem(row)
