@@ -1,5 +1,5 @@
-import PyQt6.QtWidgets as Qw
-import PyQt6.QtCore as Qc
+import PySide6.QtWidgets as Qw
+import PySide6.QtCore as Qc
 
 sp_exp = Qw.QSizePolicy.Policy.Expanding
 

@@ -1,4 +1,4 @@
-import PyQt6.QtWidgets as Qw
+import PySide6.QtWidgets as Qw
 import random
 
 sp_exp = Qw.QSizePolicy.Policy.Expanding

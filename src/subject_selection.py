@@ -1,5 +1,5 @@
-import PyQt6.QtWidgets as Qw
-import PyQt6.QtCore as Qc
+import PySide6.QtWidgets as Qw
+import PySide6.QtCore as Qc
 import english_practice as ep
 import math_practice as mp
 import science_practice as sp

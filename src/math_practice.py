@@ -1,4 +1,4 @@
-import PyQt6.QtWidgets as Qw
+import PySIde6.QtWidgets as Qw
 
 class MathPractice(Qw.QWidget):
   def __init__(self):
