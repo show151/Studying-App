@@ -55,3 +55,6 @@ class GoalsWidget(Qw.QWidget):
       self.goals_added.emit(goal_text)
       self.input_field.clear()
       self.close()
+    else:
+      Qw.QMessageBox.warning(self, "Warning", "Please enter a goal")
+      return
