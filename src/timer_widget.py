@@ -113,11 +113,9 @@ class TimerWidget(Qw.QWidget):
         Qw.QMessageBox.information(
             self, "Timer", f"Time set to {minutes} minutes and {seconds} seconds.")
       else:
-        Qw.QMessageBox.warning(
-            self, "Invaild input", "Please enter valid minutes (>= 0) and seconds (0-59).")
+        Qw.QMessageBox.warning(self, "Invaild input", "Please enter valid minutes (>= 0) and seconds (0-59).")
     except ValueError:
-      Qw.QMessageBox.warning(
-          self, "Invalid input", "Please enter valid numbers for minutes and seconds.")
+      Qw.QMessageBox.warning(self, "Invalid input", "Please enter valid numbers for minutes and seconds.")
     self.min_input.clear()
     self.sec_input.clear()
 
