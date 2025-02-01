@@ -1,7 +1,10 @@
 import PySide6.QtWidgets as Qw
 import PySide6.QtCore as Qc
-import random
+import os
 import english_practice as ep
+import json
+
+DATA_FOLE = "words.json"
 
 class EnglishWordDictionary(Qw.QWidget):
   def __init__(self):
@@ -11,7 +14,7 @@ class EnglishWordDictionary(Qw.QWidget):
     layout = Qw.QVBoxLayout(self)
 
     #単語帳
-    self.word_dict = {}
+    self.word_dict = self.load_words()
 
     #単語帳の登録
     self.add_word_label = Qw.QLabel("Add a New Word:", self)
@@ -40,6 +43,8 @@ class EnglishWordDictionary(Qw.QWidget):
     self.word_list.itemChanged.connect(self.remove_checked_words)
     layout.addWidget(self.word_list)
 
+    self.update_word_list()
+
     self.practice_button = Qw.QPushButton("Practice", self)
     self.practice_button.clicked.connect(self.start_practice)
     layout.addWidget(self.practice_button)
@@ -62,23 +67,44 @@ class EnglishWordDictionary(Qw.QWidget):
       return
 
     self.word_dict[word] = meaning
-
-    item = Qw.QListWidgetItem(f"{word} - {meaning}")
-    item.setFlags(item.flags() | Qc.Qt.ItemFlag.ItemIsUserCheckable)
-    item.setCheckState(Qc.Qt.CheckState.Unchecked)
-    self.word_list.addItem(item)
-
+    self.save_words()
+    self.update_word_list()
     self.word_input.clear()
     self.meaning_input.clear()
-    Qw.QMessageBox.information(self, "Word Added", f"'{word}' has been added to the word list.")
+    Qw.QMessageBox.information(self, "Word Added", f"'{word}' has been added to the word list.", Qw.QMessageBox.StandardButton.Ok)
+
+  def update_word_list(self):
+    """単語帳を更新する"""
+    self.word_list.clear()
+    for word, meaning in self.word_dict.items():
+      item = Qw.QListWidgetItem(f"{word}: {meaning}")
+      item.setFlags(item.flags() | Qc.Qt.ItemFlag.ItemIsUserCheckable)
+      item.setCheckState(Qc.Qt.CheckState.Unchecked)
+      self.word_list.addItem(item)
 
   def remove_checked_words(self, item):
     """チェックされた単語を削除する"""
-    if item.checkState() == Qc.Qt.CheckState.Checked:
-      word = item.text()
-      self.word_dict.pop(word, None)
-      row = self.word_list.row(item)
-      self.word_list.takeItem(row)
+    new_dict = {word: meaning for word, meaning in self.word_dict.items() 
+                if not any(f"{word}: {meaning}" == self.word_list.item(i).text()
+                          and self.word_list.item(i).checkState() == Qc.Qt.CheckState.Checked
+                          for i in range(self.word_list.count()))}
+
+    if len(new_dict) != len(self.word_dict):
+      self.word_dict = new_dict
+      self.save_words()
+      self.update_word_list()
+
+  def save_words(self):
+    """単語帳を保存する"""
+    with open(DATA_FOLE, "w", encoding="utf-8") as file:
+      json.dump(self.word_dict, file, ensure_ascii=False, indent=4)
+
+  def load_words(self):
+    """単語帳を読み込む"""
+    if os.path.exists(DATA_FOLE):
+      with open(DATA_FOLE, "r", encoding="utf-8") as file:
+        return json.load(file)
+    return {}
 
   def start_practice(self):
     """練習を開始する"""

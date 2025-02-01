@@ -110,8 +110,7 @@ class TimerWidget(Qw.QWidget):
         self.user_set_time = minutes * 60 + seconds
         self.remaining_time = self.user_set_time
         self.update_timer_display()
-        Qw.QMessageBox.information(
-            self, "Timer", f"Time set to {minutes} minutes and {seconds} seconds.")
+        Qw.QMessageBox.information(self, "Timer", f"Time set to {minutes} minutes and {seconds} seconds.", Qw.QMessageBox.StandardButton.Ok)
       else:
         Qw.QMessageBox.warning(self, "Invaild input", "Please enter valid minutes (>= 0) and seconds (0-59).")
     except ValueError:
@@ -125,7 +124,7 @@ class TimerWidget(Qw.QWidget):
       self.update_timer_display()
     else:
       self.timer.stop()
-      Qw.QMessageBox.information(self, "Timer", "Time's up!")
+      Qw.QMessageBox.information(self, "Timer", "Time's up!", Qw.QMessageBox.StandardButton.Ok)
 
   def update_timer_display(self):
     minutes, seconds = divmod(self.remaining_time, 60)

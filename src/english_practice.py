@@ -19,10 +19,11 @@ class EnglishPractice(Qw.QWidget):
     layout.addWidget(self.question_label)
 
     self.button_group = Qw.QButtonGroup(self)
-    self.option_buttons = []
+    self.button_group.setExclusive(True)
 
+    self.option_buttons = []
     for i in range(4):
-      btn =  Qw.QPushButton("", self)
+      btn =  Qw.QRadioButton("", self)
       self.option_buttons.append(btn)
       self.button_group.addButton(btn)
       layout.addWidget(btn)
@@ -59,27 +60,39 @@ class EnglishPractice(Qw.QWidget):
 
     correct_answer = self.word_dict[self.current_word]
     all_answers = list(self.word_dict.values())
-    choices = random.sample(all_answers, 3) if len(all_answers) > 3 else all_answers[:3]
 
+    choices = random.sample(all_answers, min(len(all_answers), 4))
     if correct_answer not in choices:
-      choices.append(correct_answer)
+      choices[random.randint(0, 3)] = correct_answer
 
     random.shuffle(choices)
 
+    self.button_group.setExclusive(False)
+    for btn in self.option_buttons:
+      btn.setText("")
+      btn.setChecked(False)
+    self.button_group.setExclusive(True)
+
     for i, btn in enumerate(self.option_buttons):
       btn.setText(choices[i])
-      btn.setChecked(False)
 
     self.result_label.clear()
 
   def check_answer(self):
     """回答チェック"""
-    selected_button = next((btn for btn in self.option_buttons if btn.isChecked()), None)
+    selected_button = self.button_group.checkedButton()
     if not selected_button:
       Qw.QMessageBox.warning(self, "Error", "Please select an answer.")
       return
 
-    if selected_button.text() == self.word_dict[self.current_word]:
+    selected_text = selected_button.text()
+    correct_answer = self.word_dict[self.current_word]
+
+    if not correct_answer:
+      Qw.QMessageBox.warning(self, "Error", "No correct answer found.")
+      return
+
+    if selected_text == correct_answer:
       self.result_label.setText("Correct!")
       self.result_label.setStyleSheet("color: green;")
     else:
@@ -95,7 +108,7 @@ class EnglishPractice(Qw.QWidget):
 
     correct_answer = self.word_dict[self.current_word]
     self.result_label.setText(f"Correct answer: {correct_answer}")
-    self.result_label.setStyleSheet("color: blue;")
+    self.result_label.setStyleSheet("color: lightblue;")
 
   def close(self):
     """ウィンドウを閉じる"""
