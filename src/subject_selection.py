@@ -1,6 +1,6 @@
-import PyQt6.QtWidgets as Qw
-import PyQt6.QtCore as Qc
-import english_practice as ep
+import PySide6.QtWidgets as Qw
+import PySide6.QtCore as Qc
+import english_word_dictionary as ewd
 import math_practice as mp
 import science_practice as sp
 
@@ -46,7 +46,7 @@ class SubjectSelection(Qw.QWidget):
     self.btn_eng = Qw.QPushButton("English")
     self.btn_eng.setStyleSheet(button_style)
     self.btn_eng.setSizePolicy(sp_exp, sp_exp)
-    self.btn_eng.clicked.connect(self.open_english_practice)
+    self.btn_eng.clicked.connect(self.open_english_word_dictionary)
     layout.addWidget(self.btn_eng)
 
     self.btn_back = Qw.QPushButton("Back")
@@ -65,7 +65,7 @@ class SubjectSelection(Qw.QWidget):
     self.science_practice.show()
     self.close()
 
-  def open_english_practice(self):
-    self.english_practice = ep.EnglishPractice()
+  def open_english_word_dictionary(self):
+    self.english_practice = ewd.EnglishWordDictionary()
     self.english_practice.show()
     self.close()

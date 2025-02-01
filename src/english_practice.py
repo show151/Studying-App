@@ -1,57 +1,103 @@
-import PyQt6.QtWidgets as Qw
-import PyQt6.QtCore as Qc
-
-sp_exp = Qw.QSizePolicy.Policy.Expanding
+import PySide6.QtWidgets as Qw
+import PySide6.QtCore as Qc
+import random
 
 class EnglishPractice(Qw.QWidget):
-  def __init__(self):
+  """練習用ウィンドウ"""
+  def __init__(self, word_dict, parent):
+    """初期化"""
     super().__init__()
-    layout = Qw.QVBoxLayout(self)
     self.setWindowTitle("English Practice")
-    self.setGeometry(150, 150, 600, 400)
+    self.setGeometry(150, 150, 500, 300)
+    self.word_dict = word_dict
+    self.parent = parent
 
-    layout.setSpacing(20) 
-    layout.setAlignment(Qc.Qt.AlignmentFlag.AlignCenter)
+    layout = Qw.QVBoxLayout(self)
 
-    button_style = """
-            QPushButton {
-                font-size: 18px;
-                padding: 10px;
-                border-radius: 8px;
-                background-color: #a0a0a0;
-            }
-            QPushButton:hover {
-                background-color: #d0d0d0;
-            }
-            QPushButton:pressed {
-                background-color: #a0a0a0;
-            }
-        """
+    self.question_label = Qw.QLabel("", self)
+    self.question_label.setStyleSheet("font-size: 18px; font-weight: bold;")
+    layout.addWidget(self.question_label)
 
-    self.word_label = Qw.QLabel("Word: Apple", self)
-    layout.addWidget(self.word_label)
+    self.button_group = Qw.QButtonGroup(self)
+    self.option_buttons = []
 
-    self.input_field = Qw.QLineEdit(self)
-    layout.addWidget(self.input_field)
+    for i in range(4):
+      btn =  Qw.QPushButton("", self)
+      self.option_buttons.append(btn)
+      self.button_group.addButton(btn)
+      layout.addWidget(btn)
 
-    self.btn_check = Qw.QPushButton("Check", self)
-    self.btn_check.setStyleSheet(button_style)
-    self.btn_check.setSizePolicy(sp_exp, sp_exp)
-    self.btn_check.clicked.connect(self.check_answer)
-    layout.addWidget(self.btn_check)
+    self.check_button = Qw.QPushButton("Check Answer", self)
+    self.check_button.clicked.connect(self.check_answer)
+    layout.addWidget(self.check_button)
 
-    self.btn_quit = Qw.QPushButton("Quit")
-    self.btn_quit.setStyleSheet(button_style)
-    self.btn_quit.setSizePolicy(sp_exp, sp_exp)
-    self.btn_quit.clicked.connect(self.close)
-    layout.addWidget(self.btn_quit)
+    self.show_answer_button = Qw.QPushButton("Show Answer", self)
+    self.show_answer_button.clicked.connect(self.show_answer)
+    layout.addWidget(self.show_answer_button)
 
     self.result_label = Qw.QLabel("", self)
     layout.addWidget(self.result_label)
 
+    self.next_button = Qw.QPushButton("Next Question", self)
+    self.next_button.clicked.connect(self.new_question)
+    layout.addWidget(self.next_button)
+
+    self.btn_Quit = Qw.QPushButton("Quit")
+    self.btn_Quit.clicked.connect(self.close)
+    layout.addWidget(self.btn_Quit)
+
+    self.new_question()
+
+  def new_question(self):
+    """ランダムな問題作成、4択表示"""
+    if not self.word_dict:
+      Qw.QMessageBox.warning(self, "Error", "No words in the dictionary.")
+      return
+
+    self.current_word = random.choice(list(self.word_dict.keys()))
+    self.question_label.setText(self.current_word)
+
+    correct_answer = self.word_dict[self.current_word]
+    all_answers = list(self.word_dict.values())
+    choices = random.sample(all_answers, 3) if len(all_answers) > 3 else all_answers[:3]
+
+    if correct_answer not in choices:
+      choices.append(correct_answer)
+
+    random.shuffle(choices)
+
+    for i, btn in enumerate(self.option_buttons):
+      btn.setText(choices[i])
+      btn.setChecked(False)
+
+    self.result_label.clear()
+
   def check_answer(self):
-    answer = self.input_field.text().strip().lower()
-    if answer == "りんご":
+    """回答チェック"""
+    selected_button = next((btn for btn in self.option_buttons if btn.isChecked()), None)
+    if not selected_button:
+      Qw.QMessageBox.warning(self, "Error", "Please select an answer.")
+      return
+
+    if selected_button.text() == self.word_dict[self.current_word]:
       self.result_label.setText("Correct!")
+      self.result_label.setStyleSheet("color: green;")
     else:
-      self.result_label.setText("Incorrect!")
+      self.result_label.setText(
+          "Incorrect! Correct answer: {self.word_dict[self.current_word]}")
+      self.result_label.setStyleSheet("color: red;")
+
+  def show_answer(self):
+    """正解を表示"""
+    if not hasattr(self, "current_word") or self.current_word not in self.word_dict:
+      Qw.QMessageBox.warning(self, "Error", "No question available. Please start a new question.")
+      return
+
+    correct_answer = self.word_dict[self.current_word]
+    self.result_label.setText(f"Correct answer: {correct_answer}")
+    self.result_label.setStyleSheet("color: blue;")
+
+  def close(self):
+    """ウィンドウを閉じる"""
+    self.parent.show()
+    super().close()

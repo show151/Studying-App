@@ -1,5 +1,5 @@
-import PyQt6.QtWidgets as Qw
-import PyQt6.QtCore as Qc
+import PySide6.QtWidgets as Qw
+import PySide6.QtCore as Qc
 import sys
 import timer_widget as tw
 import goals_widget as gw
@@ -13,7 +13,7 @@ class MainWindow(Qw.QMainWindow):
   def __init__(self):
     super().__init__()
     self.setWindowTitle("Studying App")
-    self.setGeometry(150, 150, 1000, 500)
+    self.setGeometry(150, 150, 600, 300)
 
     central_widget = Qw.QWidget()
     self.setCentralWidget(central_widget)

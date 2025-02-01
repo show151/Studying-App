@@ -1,10 +1,10 @@
-import PyQt6.QtWidgets as Qw
-import PyQt6.QtCore as Qc
+import PySide6.QtWidgets as Qw
+import PySide6.QtCore as Qc
 
 sp_exp = Qw.QSizePolicy.Policy.Expanding
 class GoalsWidget(Qw.QWidget):
 
-  goals_added = Qc.pyqtSignal(str)
+  goals_added = Qc.Signal(str)
 
   def __init__(self):
     super().__init__()
@@ -55,3 +55,6 @@ class GoalsWidget(Qw.QWidget):
       self.goals_added.emit(goal_text)
       self.input_field.clear()
       self.close()
+    else:
+      Qw.QMessageBox.warning(self, "Warning", "Please enter a goal")
+      return
