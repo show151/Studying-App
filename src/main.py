@@ -42,7 +42,7 @@ class MainWindow(Qw.QMainWindow):
     self.btn_prac.setMinimumSize(50, 20)
     self.btn_prac.setMaximumSize(100, 20)
     self.btn_prac.setSizePolicy(sp_exp, sp_exp)
-    self.btn_prac.clicked.connect(self.open_subject_selection)
+    self.btn_prac.clicked.connect(self.open_mode_selection)
     button_layout.addWidget(self.btn_prac)
 
     self.btn_Quit = Qw.QPushButton("Quit")
@@ -104,7 +104,7 @@ class MainWindow(Qw.QMainWindow):
     except FileNotFoundError:
       pass
 
-  def open_subject_selection(self):
+  def open_mode_selection(self):
     self.subject_window = ss.ModeSelection()
     self.subject_window.show()
 

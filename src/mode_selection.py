@@ -2,6 +2,7 @@ import PySide6.QtWidgets as Qw
 import PySide6.QtCore as Qc
 import english_word_dictionary as ewd
 import english_practice as ep
+import json
 sp_exp = Qw.QSizePolicy.Policy.Expanding
 
 class ModeSelection(Qw.QWidget):
@@ -48,16 +49,26 @@ class ModeSelection(Qw.QWidget):
     self.btn_back.clicked.connect(self.close)
     layout.addWidget(self.btn_back)
 
+    self.word_dict = self.load_word_dict()
+
   def open_english_word_dictionary(self):
     self.english_practice = ewd.EnglishWordDictionary()
     self.english_practice.show()
     self.hide()
 
+  def load_word_dict(self):
+      """JSON から単語帳を読み込む"""
+      try:
+        with open("words.json", "r", encoding="utf-8") as file:
+          return json.load(file)
+      except (FileNotFoundError, json.JSONDecodeError):
+        return {}  # ファイルがない場合は空の辞書を返す
+
   def open_english_practice(self):
     if not self.word_dict:
-      Qw.QMessageBox.warning(
-          self, "No Words", "Please add words to the list to start practicing.")
-      return
+        Qw.QMessageBox.warning(
+            self, "No Words", "Please add words to the list to start practicing.")
+        return
 
     self.practice_window = ep.EnglishPractice(self.word_dict, self)
     self.practice_window.show()

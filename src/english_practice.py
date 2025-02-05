@@ -97,7 +97,7 @@ class EnglishPractice(Qw.QWidget):
       self.result_label.setStyleSheet("color: green;")
     else:
       self.result_label.setText(
-          "Incorrect! Correct answer: {self.word_dict[self.current_word]}")
+          f"Incorrect! Correct answer: {correct_answer}")
       self.result_label.setStyleSheet("color: red;")
 
   def show_answer(self):
