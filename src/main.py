@@ -3,7 +3,7 @@ import PySide6.QtCore as Qc
 import sys
 import timer_widget as tw
 import goals_widget as gw
-import subject_selection as ss
+import mode_selection as ss
 import json
 
 sp_exp = Qw.QSizePolicy.Policy.Expanding
@@ -105,7 +105,7 @@ class MainWindow(Qw.QMainWindow):
       pass
 
   def open_subject_selection(self):
-    self.subject_window = ss.SubjectSelection()
+    self.subject_window = ss.ModeSelection()
     self.subject_window.show()
 
 if __name__ == "__main__":

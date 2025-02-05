@@ -4,7 +4,7 @@ import english_word_dictionary as ewd
 import english_practice as ep
 sp_exp = Qw.QSizePolicy.Policy.Expanding
 
-class SubjectSelection(Qw.QWidget):
+class ModeSelection(Qw.QWidget):
   def __init__(self):
     super().__init__()
     layout = Qw.QVBoxLayout(self)
